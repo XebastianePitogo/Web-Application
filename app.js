@@ -34,6 +34,7 @@ app.get('/items', (req, res) => {
 
 app.post('/items', (req, res) => {
     const { name, description } = req.body;
+    console.log('POST /items request body:', req.body);
     db.run('INSERT INTO items (name, description) VALUES (?, ?)', [name, description], function(err) {
         if (err) {
             return res.status(400).json({ error: err.message });
@@ -56,6 +57,7 @@ app.put('/items/:id', (req, res) => {
 app.patch('/items/:id', (req, res) => {
     const { id } = req.params;
     const { name, description } = req.body;
+    console.log('PATCH /items/:id request body:', req.body); 
 
     const updates = [];
     const params = [];
@@ -72,7 +74,6 @@ app.patch('/items/:id', (req, res) => {
     if (updates.length === 0) {
         return res.status(400).json({ error: 'No fields to update' });
     }
-
 
     params.push(id);
 

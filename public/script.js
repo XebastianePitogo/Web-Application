@@ -1,21 +1,22 @@
 let currentItemId = null;
-  
+
 document.addEventListener('DOMContentLoaded', () => {
     const saveBtn = document.getElementById('saveBtn');
-    const itemData = {
-        name: itemName.value,
-    };
+    const itemName = document.getElementById('itemName');
+    const itemDescription = document.getElementById('itemDescription');
     const modal = document.getElementById('modal');
 
     function showModal(title, item = {}) {
         document.getElementById('modalTitle').textContent = title;
         itemName.value = item.name || '';
+        itemDescription.value = item.description || '';
         modal.classList.remove('hidden');
     }
 
     function hideModal() {
         modal.classList.add('hidden');
-        itemData.value = '';
+        itemName.value = '';
+        itemDescription.value = '';
     }
 
     document.getElementById('addItemBtn').addEventListener('click', () => {
@@ -27,19 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault(); 
 
         if (itemName.value.trim() === '') {
-            var modal = document.getElementById("alertModal");
+            var alertModal = document.getElementById("alertModal");
             var span = document.getElementById('closeModal');
             span.addEventListener('click', hideModal);
         
-            modal.style.display = "block";
+            alertModal.style.display = "block";
         
             span.onclick = function() {
-                modal.style.display = "none";
+                alertModal.style.display = "none";
             }
         
             window.onclick = function(event) {
-                if (event.target == modal) {
-                    modal.style.display = "none";
+                if (event.target == alertModal) {
+                    alertModal.style.display = "none";
                 }
             }
         
@@ -48,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const itemData = {
             name: itemName.value,
+            description: itemDescription.value
         };
 
         const method = currentItemId ? 'PUT' : 'POST';
@@ -82,12 +84,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 itemList.innerHTML = '';
                 data.forEach(item => {
                     const li = document.createElement('li');
-                    li.classList.add('flex', 'justify-between', 'items-center', 'py-2', 'border-b', 'border-gray-300');
+                    li.classList.add('flex', 'flex-col', 'py-2', 'border-b', 'border-gray-300');
+
+                    const itemHeader = document.createElement('div');
+                    itemHeader.classList.add('flex', 'justify-between', 'items-center');
+
+                    const itemId = document.createElement('p');
+                    itemId.textContent = `ID: ${item.id}`;
+                    itemId.classList.add('text-gray-600', 'mt-2');
 
                     const itemNameSpan = document.createElement('span');
-                    itemNameSpan.textContent = item.name;
+                    itemNameSpan.textContent = `Student Name: ${item.name}`;
                     itemNameSpan.classList.add('flex-grow', 'mr-2', 'truncate');
-
 
                     const buttonContainer = document.createElement('div');
                     buttonContainer.classList.add('flex', 'space-x-2');
@@ -117,8 +125,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     buttonContainer.appendChild(editBtn);
                     buttonContainer.appendChild(deleteBtn);
-                    li.appendChild(itemNameSpan);
-                    li.appendChild(buttonContainer);
+                    itemHeader.appendChild(itemNameSpan);
+                    itemHeader.appendChild(buttonContainer);
+
+                    const itemDescription = document.createElement('p');
+                    itemDescription.textContent = `Course: ${item.description}`;
+                    itemDescription.classList.add('text-gray-600', 'mt-2');
+
+                    const itemDate = document.createElement('p');
+                    itemDate.textContent = `Date Enrolled: ${new Date(item.date_created).toLocaleString()}`;
+                    itemDate.classList.add('text-gray-600', 'mt-2');
+
+                    li.appendChild(itemHeader);
+                    li.appendChild(itemDescription);
+                    li.appendChild(itemDate);
+                    li.appendChild(itemId);
                     itemList.appendChild(li);
                 });
             })
