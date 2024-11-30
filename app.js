@@ -1,13 +1,14 @@
 import express from 'express';
 import sqlite3 from 'sqlite3';
-import cors from 'cors'; 
+import cors from 'cors';
+import path from 'path';
 
 const app = express();
 const db = new sqlite3.Database('./items.db');
 
-app.use(cors()); 
+app.use(cors());
 app.use(express.json());
-
+app.use(express.static('public')); // Serve static files from the 'public' directory
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS items (
@@ -18,9 +19,8 @@ db.serialize(() => {
     )`);
 });
 
-
 app.get('/', (req, res) => {
-    res.send('Welcome to the Items API! Use /items to manage items.');
+    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Send the HTML file
 });
 
 app.get('/items', (req, res) => {
@@ -34,7 +34,6 @@ app.get('/items', (req, res) => {
 
 app.post('/items', (req, res) => {
     const { name, description } = req.body;
-    console.log('POST /items request body:', req.body);
     db.run('INSERT INTO items (name, description) VALUES (?, ?)', [name, description], function(err) {
         if (err) {
             return res.status(400).json({ error: err.message });
@@ -57,7 +56,6 @@ app.put('/items/:id', (req, res) => {
 app.patch('/items/:id', (req, res) => {
     const { id } = req.params;
     const { name, description } = req.body;
-    console.log('PATCH /items/:id request body:', req.body); 
 
     const updates = [];
     const params = [];
@@ -97,6 +95,7 @@ app.delete('/items/:id', (req, res) => {
     });
 });
 
-app.listen(3000, () => {
-    console.log('Server is running on http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
 });
