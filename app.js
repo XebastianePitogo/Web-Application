@@ -8,7 +8,7 @@ const db = new sqlite3.Database('./items.db');
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public')); // Serve static files from the 'public' directory
+app.use(express.static('public'));
 
 db.serialize(() => {
     db.run(`CREATE TABLE IF NOT EXISTS items (
@@ -20,7 +20,7 @@ db.serialize(() => {
 });
 
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html')); // Send the HTML file
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 app.get('/items', (req, res) => {
