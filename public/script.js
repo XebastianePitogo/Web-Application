@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const method = currentItemId ? 'PUT' : 'POST';
-        const url = currentItemId ? `http://localhost:3000/items/${currentItemId}` : 'http://localhost:3000/items';
+        const url = currentItemId ? `https://web-application-1eq1.onrender.com/items/${currentItemId}` : 'https://web-application-1eq1.onrender.com/items';
 
         fetch(url, {
             method: method,
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('closeModal').addEventListener('click', hideModal);
 
     function loadItems() {
-        fetch('http://localhost:3000/items')
+        fetch('https://web-application-1eq1.onrender.com/items')
             .then(response => response.json())
             .then(data => {
                 const itemList = document.getElementById('itemList');
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     deleteBtn.textContent = 'Delete';
                     deleteBtn.classList.add('bg-red-500', 'text-white', 'p-1', 'w-20', 'text-center');
                     deleteBtn.addEventListener('click', function () {
-                        fetch(`http://localhost:3000/items/${item.id}`, {
+                        fetch(`https://web-application-1eq1.onrender.com/items/${item.id}`, {
                             method: 'DELETE',
                         })
                         .then(response => response.json())
